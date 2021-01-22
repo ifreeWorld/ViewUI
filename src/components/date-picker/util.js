@@ -27,7 +27,13 @@ export const isInRange = (time, a, b) => {
 };
 
 export const formatDate = function(date, format) {
-    date = toDate(date);
+    if (format !== 'HH:mm:ss.SSS') {
+        date = toDate(date);
+    } else {
+        if (Array.isArray(date)) {
+            date = date[0];
+        }
+    }
     if (!date) return '';
     return dateUtil.format(date, format || 'yyyy-MM-dd');
 };

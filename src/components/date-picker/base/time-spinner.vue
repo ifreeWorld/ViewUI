@@ -15,6 +15,11 @@
                 <li :class="getCellCls(item)" v-for="item in secondsList" v-show="!item.hide" @click="handleClick('seconds', item)">{{ formatTime(item.text) }}</li>
             </ul>
         </div>
+        <div :class="[prefixCls+ '-list']" v-show="showMilliseconds" ref="milliseconds">
+            <ul :class="[prefixCls + '-ul']">
+                <li :class="getCellCls(item)" v-for="item in millisecondsList" v-show="!item.hide" @click="handleClick('milliseconds', item)">{{ formatTime(item.text) }}</li>
+            </ul>
+        </div>
     </div>
 </template>
 <script>
@@ -22,7 +27,7 @@
     import { deepCopy, scrollTop, firstUpperCase } from '../../../utils/assist';
 
     const prefixCls = 'ivu-time-picker-cells';
-    const timeParts = ['hours', 'minutes', 'seconds'];
+    const timeParts = ['hours', 'minutes', 'seconds', 'milliseconds'];
 
     export default {
         name: 'TimeSpinner',
@@ -40,7 +45,15 @@
                 type: [Number, String],
                 default: NaN
             },
+            milliseconds: {
+                type: [Number, String],
+                default: NaN
+            },
             showSeconds: {
+                type: Boolean,
+                default: true
+            },
+            showMilliseconds: {
                 type: Boolean,
                 default: true
             },
@@ -51,7 +64,7 @@
         },
         data () {
             return {
-                spinerSteps: [1, 1, 1].map((one, i) => Math.abs(this.steps[i]) || one),
+                spinerSteps: [1, 1, 1, 1].map((one, i) => Math.abs(this.steps[i]) || one),
                 prefixCls: prefixCls,
                 compiled: false,
                 focusedColumn: -1, // which column inside the picker
@@ -143,6 +156,32 @@
                 }
 
                 return seconds;
+            },
+            millisecondsList () {
+                let milliseconds = [];
+                const step = this.spinerSteps[3];
+                const focusedMinute = this.focusedColumn === 2 && this.focusedTime[2];
+                const millisecond_tmpl = {
+                    text: 0,
+                    selected: false,
+                    disabled: false,
+                    hide: false
+                };
+
+                for (let i = 0; i < 1000; i += step) {
+                    const millisecond = deepCopy(millisecond_tmpl);
+                    millisecond.text = i;
+                    millisecond.focused = i === focusedMinute;
+
+                    if (this.disabledMilliseconds && this.disabledMilliseconds.length && this.disabledMilliseconds.indexOf(i) > -1) {
+                        millisecond.disabled = true;
+                        if (this.hideDisabledOptions) millisecond.hide = true;
+                    }
+                    if (this.milliseconds === i) millisecond.selected = true;
+                    milliseconds.push(millisecond);
+                }
+
+                return milliseconds;
             }
         },
         methods: {
@@ -187,7 +226,7 @@
             getScrollIndex (type, index) {
                 const Type = firstUpperCase(type);
                 const disabled = this[`disabled${Type}`];
-                if (disabled.length && this.hideDisabledOptions) {
+                if (disabled && disabled.length && this.hideDisabledOptions) {
                     let _count = 0;
                     disabled.forEach(item => item <= index ? _count++ : '');
                     index -= _count;
@@ -222,6 +261,10 @@
             seconds (val) {
                 if (!this.compiled) return;
                 this.scroll('seconds', this.secondsList.findIndex(obj => obj.text == val));
+            },
+            milliseconds (val) {
+                if (!this.compiled) return;
+                this.scroll('milliseconds', this.millisecondsList.findIndex(obj => obj.text == val));
             },
             focusedTime(updated, old){
                 timeParts.forEach((part, i) => {

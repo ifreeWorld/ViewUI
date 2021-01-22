@@ -26,7 +26,7 @@
                             <Col span="2" style="text-align: center">-</Col>
                             <Col span="11">
                                 <FormItem prop="time">
-                                    <TimePicker type="time" placeholder="Select time" v-model="formValidate.time"></TimePicker>
+                                    <TimePicker type="time" format="HH:mm:ss.SSS" placeholder="Select time" v-model="formValidate.time"></TimePicker>
                                 </FormItem>
                             </Col>
                         </Row>
@@ -110,7 +110,7 @@
                             <Col span="2" style="text-align: center">-</Col>
                             <Col span="11">
                                 <FormItem prop="time">
-                                    <TimePicker type="time" placeholder="Select time" v-model="formValidate.time"></TimePicker>
+                                    <TimePicker type="time" format="HH:mm:ss.SSS" placeholder="Select time" v-model="formValidate.time"></TimePicker>
                                 </FormItem>
                             </Col>
                         </Row>
@@ -255,8 +255,8 @@
             <DatePicker type="date" placeholder="Select date" style="width: 200px"></DatePicker>
             <DatePicker type="date" placeholder="Select date" style="width: 200px" disabled></DatePicker>
             <br>
-            <TimePicker type="time" placeholder="Select time" style="width: 168px"></TimePicker>
-            <TimePicker type="time" placeholder="Select time" style="width: 168px" disabled></TimePicker>
+            <TimePicker type="time" format="HH:mm:ss.SSS" placeholder="Select time" style="width: 168px"></TimePicker>
+            <TimePicker type="time" format="HH:mm:ss.SSS" placeholder="Select time" style="width: 168px" disabled></TimePicker>
             <br>
             <Cascader :data="data2"></Cascader>
             <Cascader :data="data2" disabled></Cascader>
@@ -392,7 +392,7 @@
                         }]
                     }]
                 }]
-            }
+            };
         },
         methods: {
             handleSubmit (name) {
@@ -402,7 +402,7 @@
                     } else {
                         this.$Message.error('Fail!');
                     }
-                })
+                });
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
@@ -415,5 +415,5 @@
                 ];
             }
         }
-    }
+    };
 </script>

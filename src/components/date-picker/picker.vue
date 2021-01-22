@@ -111,9 +111,9 @@
     };
 
     const extractTime = date => {
-        if (!date) return [0, 0, 0];
+        if (!date) return [0, 0, 0, 0];
         return [
-            date.getHours(), date.getMinutes(), date.getSeconds()
+            date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()
         ];
     };
 
@@ -282,7 +282,8 @@
                 return bottomPlaced ? 'slide-up' : 'slide-down';
             },
             visualValue() {
-                return this.formatDate(this.internalValue);
+                const aa =  this.formatDate(this.internalValue);
+                return aa;
             },
             isConfirm(){
                 return this.confirm || this.type === 'datetime' || this.type === 'datetimerange' || this.multiple;

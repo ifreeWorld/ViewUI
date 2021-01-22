@@ -26,6 +26,7 @@ export default {
                 disabledHours: this.disabledHours,
                 disabledMinutes: this.disabledMinutes,
                 disabledSeconds: this.disabledSeconds,
+                disabledMilliseconds: this.disabledMilliseconds,
                 hideDisabledOptions: this.hideDisabledOptions
             };
         }

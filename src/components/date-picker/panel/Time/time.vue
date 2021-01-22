@@ -6,13 +6,16 @@
                 <time-spinner
                     ref="timeSpinner"
                     :show-seconds="showSeconds"
+                    :show-milliseconds="showMilliseconds"
                     :steps="steps"
                     :hours="timeSlots[0]"
                     :minutes="timeSlots[1]"
                     :seconds="timeSlots[2]"
+                    :milliseconds="timeSlots[3]"
                     :disabled-hours="disabledHMS.disabledHours"
                     :disabled-minutes="disabledHMS.disabledMinutes"
                     :disabled-seconds="disabledHMS.disabledSeconds"
+                    :disabled-milliseconds="disabledHMS.disabledMilliseconds"
                     :hide-disabled-options="hideDisabledOptions"
                     @on-change="handleChange"
                     @on-pick-click="handlePickClick"></time-spinner>
@@ -84,6 +87,9 @@
                 //fix Hour & Minute Picker bug,show seconds when has "ss"
                 return !!(this.format || '').match(/ss/);
             },
+            showMilliseconds () {
+                return !!(this.format || '').match(/SSS/);
+            },
             visibleDate () { // TODO
                 const date = this.date;
                 const month = date.getMonth() + 1;
@@ -93,18 +99,18 @@
             },
             timeSlots(){
                 if (!this.value[0]) return [];
-                return ['getHours', 'getMinutes', 'getSeconds'].map(slot => this.date[slot]());
+                return ['getHours', 'getMinutes', 'getSeconds', 'getMilliseconds'].map(slot => this.date[slot]());
             },
             disabledHMS(){
-                const disabledTypes = ['disabledHours', 'disabledMinutes', 'disabledSeconds'];
+                const disabledTypes = ['disabledHours', 'disabledMinutes', 'disabledSeconds', 'disabledMilliseconds'];
                 if (this.disabledDate === returnFalse || !this.value[0]) {
                     const disabled = disabledTypes.reduce(
                         (obj, type) => (obj[type] = this[type], obj), {}
                     );
                     return disabled;
                 } else {
-                    const slots = [24, 60, 60];
-                    const disabled = ['Hours', 'Minutes', 'Seconds'].map(type => this[`disabled${type}`]);
+                    const slots = [24, 60, 60, 100];
+                    const disabled = ['Hours', 'Minutes', 'Seconds', 'Milliseconds'].map(type => this[`disabled${type}`]);
                     const disabledHMS = disabled.map((preDisabled, j) => {
                         const slot = slots[j];
                         const toDisable = preDisabled;
